@@ -1,0 +1,718 @@
+/*
+ * WinForms (Windows 10 visual styles) reconstruction.
+ * Faithful to the original WebsiteDownloader .NET WinForms UI:
+ * Segoe UI typography, #F0F0F0 form background, themed controls.
+ */
+
+:root {
+  --wf-font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  --wf-mono: Consolas, "Cascadia Mono", "Courier New", monospace;
+  --wf-form-bg: #f0f0f0;
+  --wf-text: #1e1e1e;
+  --wf-btn-bg: #e1e1e1;
+  --wf-btn-border: #adadad;
+  --wf-btn-hover-bg: #e5f1fb;
+  --wf-btn-hover-border: #0078d7;
+  --wf-btn-active-bg: #cce4f7;
+  --wf-btn-active-border: #005499;
+  --wf-btn-disabled: #cccccc;
+  --wf-input-border: #7a7a7a;
+  --wf-focus: #0078d7;
+  --wf-accent: #007acc; /* original btnDownload BackColor (0,122,204) */
+  --wf-accent-hover: #1c8bd4;
+  --wf-accent-active: #006bb3;
+  --wf-cancel: #c94f4f; /* original btnCancel BackColor (201,79,79) */
+  --wf-cancel-hover: #d56363;
+  --wf-cancel-active: #b23f3f;
+  --wf-header-bg: #2d2d30; /* original panelHeader (45,45,48) */
+  --wf-log-bg: #1e1e1e;
+  --wf-log-fg: #dcdcdc;
+  --wf-grid: #f0f0f0;
+  --wf-select: #0078d7;
+  --wf-error: #ff0000;
+  --wf-warning: #ff8c00; /* DarkOrange */
+  --wf-ok: #006400; /* DarkGreen */
+  --wf-fail: #8b0000; /* DarkRed */
+  --wf-status-alert: #ff4500; /* OrangeRed */
+  --wf-hint: #6d6d6d; /* SystemColors.GrayText */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--wf-font);
+  color: var(--wf-text);
+  /* desktop-like backdrop around the app window */
+  background: #3b3f46;
+  background-image: radial-gradient(1200px 700px at 50% -10%, #4a5058 0%, #33373d 60%, #2b2e33 100%);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wf-stage {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* The application "window" */
+.wf-window {
+  background: var(--wf-form-bg);
+  width: 650px; /* 634 client + borders */
+  min-width: 320px;
+  max-width: 100%;
+  border: 1px solid #1b1b1d;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.55),
+    0 2px 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  max-height: calc(100dvh - 48px);
+}
+
+@media (max-width: 700px) {
+  .wf-stage {
+    padding: 0;
+  }
+  .wf-window {
+    width: 100%;
+    border: none;
+    min-height: 100dvh;
+    max-height: none;
+  }
+}
+
+/* ---------- header panel (panelHeader) ---------- */
+.wf-app-header {
+  background: var(--wf-header-bg);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+  flex: none;
+  user-select: none;
+}
+.wf-app-header img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+.wf-app-header h1 {
+  color: #fff;
+  font-size: 21.3px; /* Segoe UI 16pt */
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- form body ---------- */
+.wf-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0;
+}
+
+.wf-label {
+  display: block;
+  font-size: 13.3px; /* Segoe UI 10pt */
+  margin: 3px 0 3px;
+}
+
+.wf-input,
+.wf-combo {
+  font-family: var(--wf-font);
+  font-size: 14.7px; /* Segoe UI 11pt */
+  padding: 3px 6px;
+  border: 1px solid var(--wf-input-border);
+  background: #fff;
+  color: var(--wf-text);
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  height: 27px;
+}
+.wf-input:focus,
+.wf-combo:focus {
+  border-color: var(--wf-focus);
+}
+.wf-input:disabled,
+.wf-combo:disabled {
+  background: #f0f0f0;
+  color: #6d6d6d;
+  border-color: #bfbfbf;
+}
+.wf-input::placeholder {
+  color: #6d6d6d;
+  font-style: italic;
+}
+
+/* static label rendered like the bordered output-folder Label */
+.wf-static-box {
+  border: 1px solid var(--wf-input-border);
+  background: #fff;
+  height: 27px;
+  line-height: 25px;
+  padding: 0 6px;
+  font-size: 13.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl; /* AutoEllipsis from the left, like the original label */
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+
+/* ---------- buttons ---------- */
+.wf-btn {
+  font-family: var(--wf-font);
+  font-size: 13.3px; /* Segoe UI 10pt */
+  background: var(--wf-btn-bg);
+  border: 1px solid var(--wf-btn-border);
+  color: var(--wf-text);
+  padding: 4px 12px;
+  min-height: 23px;
+  border-radius: 0;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background-color 80ms ease-out, border-color 80ms ease-out;
+}
+.wf-btn:hover:not(:disabled) {
+  background: var(--wf-btn-hover-bg);
+  border-color: var(--wf-btn-hover-border);
+}
+.wf-btn:active:not(:disabled) {
+  background: var(--wf-btn-active-bg);
+  border-color: var(--wf-btn-active-border);
+}
+.wf-btn:disabled {
+  color: #838383;
+  background: #cccccc;
+  border-color: #bfbfbf;
+  cursor: default;
+}
+.wf-btn:focus-visible {
+  outline: 1px dotted #1e1e1e;
+  outline-offset: -4px;
+}
+
+.wf-btn-primary {
+  background: var(--wf-accent);
+  border: none;
+  color: #fff;
+  font-size: 14.7px; /* Segoe UI 11pt bold */
+  font-weight: 700;
+  height: 40px;
+}
+.wf-btn-primary:hover:not(:disabled) {
+  background: var(--wf-accent-hover);
+}
+.wf-btn-primary:active:not(:disabled) {
+  background: var(--wf-accent-active);
+}
+.wf-btn-primary:disabled {
+  background: #8fc3e4;
+  color: #e8f2f9;
+}
+.wf-btn-primary:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+.wf-btn-danger {
+  background: var(--wf-cancel);
+  border: none;
+  color: #fff;
+  font-size: 14.7px;
+  font-weight: 700;
+  height: 40px;
+}
+.wf-btn-danger:hover:not(:disabled) {
+  background: var(--wf-cancel-hover);
+}
+.wf-btn-danger:active:not(:disabled) {
+  background: var(--wf-cancel-active);
+}
+.wf-btn-danger:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+/* ---------- checkbox ---------- */
+.wf-check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.3px;
+  cursor: pointer;
+  user-select: none;
+  padding: 1px 0;
+}
+.wf-check input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.wf-check .box {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  background: #fff;
+  border: 1px solid #333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 80ms ease-out, border-color 80ms ease-out;
+}
+.wf-check .box svg {
+  width: 11px;
+  height: 11px;
+  color: #1e1e1e;
+  opacity: 0;
+}
+.wf-check input:checked + .box svg {
+  opacity: 1;
+}
+.wf-check:hover .box {
+  border-color: var(--wf-focus);
+  background: var(--wf-btn-hover-bg);
+}
+.wf-check input:focus-visible + .box {
+  outline: 1px dotted #1e1e1e;
+  outline-offset: 2px;
+}
+.wf-check.disabled {
+  color: #838383;
+  cursor: default;
+}
+.wf-check.disabled .box {
+  background: #f0f0f0;
+  border-color: #bfbfbf;
+}
+.wf-check.disabled input:checked + .box svg {
+  color: #838383;
+}
+
+/* ---------- numeric up-down ---------- */
+.wf-num {
+  display: inline-flex;
+  align-items: stretch;
+  height: 22px;
+}
+.wf-num input {
+  font-family: var(--wf-font);
+  font-size: 13px;
+  width: 46px;
+  padding: 1px 4px;
+  border: 1px solid var(--wf-input-border);
+  border-right: none;
+  outline: none;
+  border-radius: 0;
+  background: #fff;
+  color: var(--wf-text);
+}
+.wf-num input:focus {
+  border-color: var(--wf-focus);
+}
+.wf-num .spin {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--wf-input-border);
+  background: var(--wf-btn-bg);
+}
+.wf-num .spin button {
+  flex: 1;
+  width: 17px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 8px;
+  line-height: 1;
+  color: #1e1e1e;
+  padding: 0;
+}
+.wf-num .spin button:hover {
+  background: var(--wf-btn-hover-bg);
+}
+.wf-num .spin button:active {
+  background: var(--wf-btn-active-bg);
+}
+.wf-num.disabled input {
+  background: #f0f0f0;
+  color: #6d6d6d;
+}
+.wf-num.disabled .spin button {
+  color: #a0a0a0;
+  cursor: default;
+}
+
+/* ---------- group box ---------- */
+.wf-group {
+  border: 1px solid #d5d5d5;
+  padding: 10px 12px 12px;
+  margin: 0;
+  position: relative;
+}
+.wf-group legend {
+  font-size: 12px;
+  padding: 0 4px;
+  margin-left: -4px;
+}
+
+/* ---------- tab control ---------- */
+.wf-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.wf-tabstrip {
+  display: flex;
+  gap: 1px;
+  padding: 3px 3px 0;
+  flex: none;
+  overflow-x: auto;
+}
+.wf-tab {
+  font-family: var(--wf-font);
+  font-size: 12px;
+  border: 1px solid #d9d9d9;
+  border-bottom: none;
+  background: linear-gradient(#fdfdfd, #f2f2f2);
+  padding: 3px 12px 4px;
+  cursor: pointer;
+  color: var(--wf-text);
+  border-radius: 0;
+  white-space: nowrap;
+}
+.wf-tab:hover:not(.active) {
+  background: linear-gradient(#eef6fd, #e0effb);
+}
+.wf-tab.active {
+  background: #fff;
+  position: relative;
+  padding-top: 4px;
+  margin-top: -1px;
+  border-top: 1px solid #d9d9d9;
+}
+.wf-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: #fff;
+}
+.wf-tab:focus-visible {
+  outline: 1px dotted #1e1e1e;
+  outline-offset: -3px;
+}
+.wf-tabpage {
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- log text box ---------- */
+.wf-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: var(--wf-log-bg);
+  color: var(--wf-log-fg);
+  font-family: var(--wf-mono);
+  font-size: 12px; /* Consolas 9pt */
+  line-height: 1.35;
+  border: none;
+  padding: 4px 6px;
+  margin: 3px;
+  resize: none;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-y: auto;
+  user-select: text;
+}
+.wf-log .dim {
+  color: #808080;
+}
+
+/* ---------- list view ---------- */
+.wf-listview {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid var(--wf-input-border);
+  background: #fff;
+  margin: 3px;
+  font-size: 12px;
+  user-select: none;
+}
+.wf-listview table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.wf-listview th {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(#ffffff, #f4f4f4);
+  border-bottom: 1px solid #d9d9d9;
+  border-right: 1px solid var(--wf-grid);
+  font-weight: 400;
+  text-align: left;
+  padding: 3px 6px;
+  font-size: 12px;
+  z-index: 1;
+}
+.wf-listview td {
+  padding: 2px 6px;
+  border-bottom: 1px solid var(--wf-grid);
+  border-right: 1px solid var(--wf-grid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wf-listview tbody tr {
+  cursor: default;
+}
+.wf-listview tbody tr:hover:not(.selected) {
+  background: #e5f3ff;
+}
+.wf-listview tbody tr.selected {
+  background: var(--wf-select);
+  color: #fff;
+}
+.wf-listview tbody tr.selected * {
+  color: #fff !important;
+}
+.wf-listview .lv-error {
+  color: var(--wf-error);
+}
+.wf-listview .lv-warning {
+  color: var(--wf-warning);
+}
+.wf-listview .lv-ok {
+  color: var(--wf-ok);
+}
+.wf-listview .lv-fail {
+  color: var(--wf-fail);
+}
+.wf-listview .lv-empty {
+  text-align: center;
+  color: #6d6d6d;
+  padding: 18px 0;
+}
+
+/* ---------- progress bar (marquee, indeterminate) ---------- */
+.wf-progress {
+  height: 8px;
+  background: #e6e6e6;
+  border: 1px solid #bcbcbc;
+  overflow: hidden;
+  position: relative;
+}
+.wf-progress .marquee {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 33%;
+  background: #06b025; /* WinForms marquee green */
+  animation: wf-marquee 1.8s linear infinite;
+}
+@keyframes wf-marquee {
+  from {
+    left: -33%;
+  }
+  to {
+    left: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-progress .marquee {
+    animation-duration: 6s;
+  }
+}
+
+/* ---------- status strip ---------- */
+.wf-status {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 10px;
+  background: var(--wf-form-bg);
+  border-top: 1px solid #d9d9d9;
+  font-size: 12px;
+  color: var(--wf-text);
+}
+.wf-status .alert {
+  color: var(--wf-status-alert);
+}
+
+/* ---------- dialogs (Form / MessageBox) ---------- */
+.wf-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+  animation: wf-fade 120ms ease-out;
+}
+@keyframes wf-fade {
+  from {
+    opacity: 0;
+  }
+}
+.wf-dialog {
+  background: var(--wf-form-bg);
+  border: 1px solid #1b1b1d;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  max-height: calc(100dvh - 32px);
+  animation: wf-pop 120ms ease-out;
+}
+@keyframes wf-pop {
+  from {
+    transform: scale(0.98);
+    opacity: 0.4;
+  }
+}
+.wf-dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 6px 10px;
+  font-size: 12px;
+  user-select: none;
+  flex: none;
+}
+.wf-dialog-title .x {
+  border: none;
+  background: transparent;
+  font-family: var(--wf-font);
+  font-size: 13px;
+  width: 32px;
+  height: 22px;
+  cursor: pointer;
+  color: #1e1e1e;
+}
+.wf-dialog-title .x:hover {
+  background: #e81123;
+  color: #fff;
+}
+.wf-dialog-body {
+  padding: 12px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+.wf-dialog-footer {
+  display: flex;
+  gap: 8px;
+  padding: 0 12px 12px;
+  flex: none;
+}
+
+/* MessageBox layout */
+.wf-msgbox-content {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 8px 12px 18px;
+  min-width: 280px;
+  max-width: 460px;
+}
+.wf-msgbox-content .icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin-top: 2px;
+}
+.wf-msgbox-content .text {
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-top: 4px;
+}
+.wf-msgbox-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+.wf-msgbox-buttons .wf-btn {
+  min-width: 88px;
+  padding: 4px 14px;
+}
+.wf-msgbox-buttons .wf-btn.default {
+  border-color: var(--wf-focus);
+  box-shadow: inset 0 0 0 1px var(--wf-focus);
+}
+
+/* settings dialog tab content scrolls */
+.wf-settings-tabcontent {
+  padding: 14px 14px 10px;
+  overflow-y: auto;
+  display: block;
+  font-size: 13.3px;
+}
+.wf-field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.wf-field-row .wf-label {
+  margin: 0;
+  flex: none;
+}
+.wf-hint {
+  color: var(--wf-hint);
+  font-size: 12px;
+}
+
+/* link-colored text button */
+.wf-link {
+  color: #0066cc;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
